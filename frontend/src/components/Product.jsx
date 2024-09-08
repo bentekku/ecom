@@ -2,8 +2,13 @@ import { CiShoppingCart } from "react-icons/ci";
 import PropTypes from "prop-types";
 
 const Product = ({ data }) => {
+  // TODO:
+  // [] Implement Routing
   return (
-    <div className="product !h-fit h-[300px] bg-white drop-shadow-2xl p-2 border">
+    <div
+      className="product !h-fit h-[300px] bg-white drop-shadow-2xl p-2 border cursor-pointer"
+      onClick={() => console.log(`clicked: ${data.title}`)}
+    >
       <img src={data.img} alt="" className="w-full h-[60%] object-cover p-2" />
       <div className="m-2 bg-gray-100 p-2 space-y-2">
         <h1 className="text-xl font-semibold">{data.title}</h1>
@@ -24,6 +29,7 @@ Product.propTypes = {
     title: PropTypes.string.isRequired,
     price: PropTypes.string.isRequired,
     desc: PropTypes.string.isRequired,
+    slug: PropTypes.string.isRequired,
   }),
 };
 
