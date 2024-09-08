@@ -68,26 +68,30 @@ const products = [
 const categories = [
   {
     id: 1,
-    name: "Caps",
+    name: "All",
   },
   {
     id: 2,
-    name: "Headphone",
+    name: "Caps",
   },
   {
     id: 3,
-    name: "Laptop",
+    name: "Headphone",
   },
   {
     id: 4,
-    name: "Watch",
+    name: "Laptop",
   },
   {
     id: 5,
-    name: "Jeans",
+    name: "Watch",
   },
   {
     id: 6,
+    name: "Jeans",
+  },
+  {
+    id: 7,
     name: "Shoes",
   },
 ];
