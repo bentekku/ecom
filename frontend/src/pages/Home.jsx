@@ -5,7 +5,7 @@ const Home = () => {
   return (
     <>
       <Sidebar />
-      <div>
+      <div className="ml-[80px]">
         <Main />
       </div>
     </>
