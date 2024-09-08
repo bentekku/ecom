@@ -5,6 +5,7 @@ const Home = () => {
   return (
     <>
       <Sidebar />
+      {/* Pushing the page to right-side */}
       <div className="ml-[80px]">
         <Main />
       </div>

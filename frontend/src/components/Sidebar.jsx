@@ -1,6 +1,7 @@
 import { HiOutlineMenuAlt2, HiOutlineHome } from "react-icons/hi";
 import { CiShoppingCart, CiDeliveryTruck } from "react-icons/ci";
 import { IoHeartOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   return (
@@ -13,26 +14,34 @@ const Sidebar = () => {
         </li>
 
         <li>
-          <button>
-            <HiOutlineHome size={"1.5rem"} />
-          </button>
+          <Link to={"/"}>
+            <button>
+              <HiOutlineHome size={"1.5rem"} />
+            </button>
+          </Link>
         </li>
         <li>
-          <button>
-            <CiShoppingCart size={"1.5rem"} />
-          </button>
-        </li>
-
-        <li>
-          <button>
-            <CiDeliveryTruck size={"1.5rem"} />
-          </button>
+          <Link to={"/cart"}>
+            <button>
+              <CiShoppingCart size={"1.5rem"} />
+            </button>
+          </Link>
         </li>
 
         <li>
-          <button>
-            <IoHeartOutline size={"1.5rem"} />
-          </button>
+          <Link to={"/order"}>
+            <button>
+              <CiDeliveryTruck size={"1.5rem"} />
+            </button>
+          </Link>
+        </li>
+
+        <li>
+          <Link to={"/favourite"}>
+            <button>
+              <IoHeartOutline size={"1.5rem"} />
+            </button>
+          </Link>
         </li>
       </ul>
     </div>
