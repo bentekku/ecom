@@ -52,7 +52,7 @@ const Main = () => {
           </button>
         </div>
 
-        <div className="categories w-full flex space-x-8 px-5 py-10">
+        <div className="categories w-full flex justify-between px-5 py-10">
           {categories.map((cat) => (
             <CategoryBubble data={cat} key={cat.id} />
           ))}
