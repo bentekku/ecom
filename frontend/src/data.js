@@ -29,4 +29,31 @@ const products = [
   },
 ];
 
-export { products };
+const categories = [
+  {
+    id: 1,
+    name: "Caps",
+  },
+  {
+    id: 2,
+    name: "Headphone",
+  },
+  {
+    id: 3,
+    name: "Laptop",
+  },
+  {
+    id: 4,
+    name: "Watch",
+  },
+  {
+    id: 5,
+    name: "Jeans",
+  },
+  {
+    id: 6,
+    name: "Shoes",
+  },
+];
+
+export { products, categories };
