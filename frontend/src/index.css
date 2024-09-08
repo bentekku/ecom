@@ -7,11 +7,13 @@
   overflow-y: hidden;
   white-space: nowrap;
 }
+
+/* Modifying scroll-bar */
 .categories::-webkit-scrollbar {
   width: 6px;
 }
 .categories::-webkit-scrollbar-thumb {
-  background-color: rgb(243, 244, 246);
+  background-color: rgb(241, 241, 241);
   border-radius: 20px;
 }
 .categories::-webkit-scrollbar-track {
@@ -19,3 +21,8 @@
   border-radius: 20px;
   background-color: transparent;
 }
+
+/* 
+.products {
+  padding: 20px;
+} */
