@@ -8,6 +8,10 @@ const productSchema = new mongoose.Schema({
     required: [true, "Please enter product name"],
     trim: true,
   },
+  img: {
+    type: String,
+    required: [true, "Please enter the url of the image"],
+  },
   price: {
     type: Number,
     required: [true, "Please enter product price"],
