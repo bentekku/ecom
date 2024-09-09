@@ -28,8 +28,3 @@
 .active-category {
   @apply bg-black text-white;
 }
-
-/* 
-.products {
-  padding: 20px;
-} */

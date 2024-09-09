@@ -12,6 +12,8 @@ const Main = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [visibleCount, setVisibleCount] = useState(5);
   const [activeCategory, setActiveCategory] = useState("all");
+  const [selectedColor, setSelectedColor] = useState(""); // Add state for selected color
+  const [selectedFilter, setSelectedFilter] = useState("default"); // Add state for selected filter
 
   // Fetch products when the component mounts
   useEffect(() => {
@@ -28,7 +30,7 @@ const Main = () => {
     fetchProducts();
   }, []);
 
-  // Handle search and category filtering
+  // Handle search, category, and color filtering
   useEffect(() => {
     let updatedProducts = products;
 
@@ -44,8 +46,26 @@ const Main = () => {
       );
     }
 
+    if (selectedColor) {
+      updatedProducts = updatedProducts.filter((prod) => {
+        // Ensure color is a string before using toLowerCase
+        const prodColor =
+          typeof prod.color === "string" ? prod.color.toLowerCase() : "";
+        return prodColor === selectedColor.toLowerCase();
+      });
+    }
+
+    // Apply sorting based on the selected filter
+    if (selectedFilter === "price") {
+      updatedProducts = updatedProducts.sort((a, b) => a.price - b.price);
+    } else if (selectedFilter === "popularity") {
+      updatedProducts = updatedProducts.sort(
+        (a, b) => b.popularity - a.popularity
+      );
+    }
+
     setFilteredProducts(updatedProducts);
-  }, [searchTerm, products, activeCategory]);
+  }, [searchTerm, products, activeCategory, selectedColor, selectedFilter]);
 
   // Load more products
   const loadMoreHandler = () => {
@@ -54,6 +74,14 @@ const Main = () => {
 
   const handleCategoryChange = (name) => {
     setActiveCategory(name.toLowerCase());
+  };
+
+  const handleColorChange = (e) => {
+    setSelectedColor(e.target.value);
+  };
+
+  const handleFilterChange = (e) => {
+    setSelectedFilter(e.target.value);
   };
 
   return (
@@ -95,7 +123,9 @@ const Main = () => {
               <select
                 name="Color"
                 className="border py-2 px-4 rounded outline-0 capitalize"
+                onChange={handleColorChange}
               >
+                <option value="">All Colors</option>
                 {colors.map((item, indx) => (
                   <option value={item.name} key={indx}>
                     {item.name}
@@ -109,9 +139,11 @@ const Main = () => {
               <select
                 name="Filter"
                 className="border py-2 px-4 rounded outline-0 capitalize"
+                onChange={handleFilterChange}
               >
+                <option value="default">Default</option>
                 {filters.map((filter, indx) => (
-                  <option value={filter.name} key={indx}>
+                  <option value={filter.name.toLowerCase()} key={indx}>
                     {filter.name}
                   </option>
                 ))}
