@@ -9,6 +9,7 @@ const Main = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState([]); // Store all products fetched from the backend
   const [filteredProducts, setFilteredProducts] = useState([]); // Store the filtered list
+  const [visibleCount, setVisibleCount] = useState(5); // Number of products to show initially
 
   // Fetch products when the component mounts
   useEffect(() => {
@@ -35,6 +36,11 @@ const Main = () => {
     } else {
       setFilteredProducts(products); // Reset to all products if search is cleared
     }
+  };
+
+  // Load more products
+  const loadMoreHandler = () => {
+    setVisibleCount((prevCount) => prevCount + 5); // Increase the visible count by 5
   };
 
   return (
@@ -66,10 +72,21 @@ const Main = () => {
 
         <div className="products grid grid-cols-2 xl:grid-cols-5 lg:grid-cols-3 gap-9 p-4 z-20">
           {filteredProducts &&
-            filteredProducts.map((prod) => (
-              <Product data={prod} key={prod._id} />
-            ))}
+            filteredProducts
+              .slice(0, visibleCount)
+              .map((prod) => <Product data={prod} key={prod._id} />)}
         </div>
+
+        {visibleCount < filteredProducts.length && (
+          <div className="flex justify-center mt-4">
+            <button
+              className="px-6 py-2 bg-black text-white rounded-lg hover:drop-shadow-lg hover:scale-[110%] transition-all hover:font-bold ease-out"
+              onClick={loadMoreHandler}
+            >
+              Load More
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
