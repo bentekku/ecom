@@ -24,19 +24,19 @@ const Main = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, []); // Empty dependency array to run only once on mount
 
   // Handle the search functionality
-  const searchHandler = () => {
+  useEffect(() => {
     if (searchTerm.trim()) {
       const filteredArray = products.filter((prod) =>
-        prod.title.toLowerCase().includes(searchTerm.toLowerCase())
+        prod.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredProducts(filteredArray.length > 0 ? filteredArray : products);
     } else {
       setFilteredProducts(products); // Reset to all products if search is cleared
     }
-  };
+  }, [searchTerm, products]); // Only run this effect when searchTerm or products change
 
   // Load more products
   const loadMoreHandler = () => {
@@ -53,12 +53,9 @@ const Main = () => {
               type="text"
               placeholder="Search product"
               className="bg-transparent outline-0"
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                searchHandler();
-              }}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button onClick={searchHandler}>
+            <button>
               <CiSearch />
             </button>
           </div>
