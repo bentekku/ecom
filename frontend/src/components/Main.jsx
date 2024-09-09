@@ -47,11 +47,14 @@ const Main = () => {
     }
 
     if (selectedColor) {
+      console.log(`Filtering by color: ${selectedColor}`); // Debugging
       updatedProducts = updatedProducts.filter((prod) => {
-        // Ensure color is a string before using toLowerCase
-        const prodColor =
-          typeof prod.color === "string" ? prod.color.toLowerCase() : "";
-        return prodColor === selectedColor.toLowerCase();
+        // Ensure color is an array and check if it includes the selected color
+        const prodColors = Array.isArray(prod.color)
+          ? prod.color.map((color) => color.toLowerCase())
+          : [];
+        console.log(`Product colors: ${prodColors}`); // Debugging
+        return prodColors.includes(selectedColor.toLowerCase());
       });
     }
 
@@ -60,7 +63,7 @@ const Main = () => {
       updatedProducts = updatedProducts.sort((a, b) => a.price - b.price);
     } else if (selectedFilter === "popularity") {
       updatedProducts = updatedProducts.sort(
-        (a, b) => b.popularity - a.popularity
+        (a, b) => b.isMostPopular - a.isMostPopular
       );
     }
 

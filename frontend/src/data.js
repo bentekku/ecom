@@ -94,6 +94,12 @@ const colors = [
   {
     name: "chrome",
   },
+  {
+    name: "gray",
+  },
+  {
+    name: "yellow",
+  },
 ];
 
 const filters = [
