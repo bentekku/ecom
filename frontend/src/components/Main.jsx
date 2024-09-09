@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { categories } from "../data"; // Assuming categories is static
+import { categories, colors, filters } from "../data"; // Assuming categories is static
 import CategoryBubble from "./CategoryBubble";
 import Product from "./Product";
 import axios from "axios";
+import "../index.css";
 
 const Main = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState([]); // Store all products fetched from the backend
   const [filteredProducts, setFilteredProducts] = useState([]); // Store the filtered list
   const [visibleCount, setVisibleCount] = useState(5); // Number of products to show initially
+  const [activeCategory, setActiveCategory] = useState("all");
 
   // Fetch products when the component mounts
   useEffect(() => {
@@ -24,6 +26,8 @@ const Main = () => {
     };
 
     fetchProducts();
+
+    console.log("Active Category Right now: " + activeCategory);
   }, []); // Empty dependency array to run only once on mount
 
   // Handle the search functionality
@@ -41,6 +45,10 @@ const Main = () => {
   // Load more products
   const loadMoreHandler = () => {
     setVisibleCount((prevCount) => prevCount + 5); // Increase the visible count by 5
+  };
+
+  const handleCategoryChange = (name) => {
+    setActiveCategory(name.toLowerCase());
   };
 
   return (
@@ -61,13 +69,54 @@ const Main = () => {
           </div>
         </div>
 
-        <div className="categories bg-white w-full flex justify-between space-x-8 px-5 py-10">
-          {categories.map((cat) => (
-            <CategoryBubble data={cat} key={cat.id} />
-          ))}
+        {/* CATEOGORIES AND FILTERS WRAPPER */}
+        <div className="flex items-center justify-between px-10">
+          {/* CATEGORIES */}
+          <div className=" bg-white flex items-center justify-center space-x-12 px-5 py-10">
+            {categories.map((cat, indx) => (
+              <CategoryBubble
+                data={cat}
+                key={indx}
+                activeComp={activeCategory}
+                onClick={handleCategoryChange}
+              />
+            ))}
+          </div>
+          {/* FILTERS */}
+          <div className="bg-white flex items-center justify-center space-x-12 px-5 py-10">
+            {/* COLOR */}
+            <div>
+              <span className="mr-2">Color</span>
+              <select
+                name="Color"
+                className="border py-2 px-4 rounded outline-0 capitalize"
+              >
+                {colors.map((item, indx) => (
+                  <option value={item.name} key={indx}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* PRICE/POPULARITY */}
+            <div>
+              <span className="mr-2">Filter</span>
+              <select
+                name="Filter"
+                className="border py-2 px-4 rounded outline-0 capitalize"
+              >
+                {filters.map((filter, indx) => (
+                  <option value={filter.name} key={indx}>
+                    {filter.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
 
-        <div className="products grid grid-cols-2 xl:grid-cols-5 lg:grid-cols-3 gap-9 p-4 z-20">
+        {/* PRODUCTS */}
+        <div className="grid grid-cols-2 xl:grid-cols-5 lg:grid-cols-3 gap-9 p-4 z-20">
           {filteredProducts &&
             filteredProducts
               .slice(0, visibleCount)

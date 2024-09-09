@@ -22,6 +22,13 @@
   background-color: transparent;
 }
 
+.inactive-catgory {
+  @apply bg-white text-black;
+}
+.active-category {
+  @apply bg-black text-white;
+}
+
 /* 
 .products {
   padding: 20px;

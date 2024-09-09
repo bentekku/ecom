@@ -1,6 +1,5 @@
 const products = [
   {
-    id: 1,
     img: "https://github.com/8kra/8kra-Ecommerce/blob/master/public/images/products/watch.jpg?raw=true",
     title: "Black Round Dial Watch",
     price: "$52.99",
@@ -8,7 +7,6 @@ const products = [
     slug: "black-round-watch",
   },
   {
-    id: 2,
     img: "https://github.com/8kra/8kra-Ecommerce/blob/master/public/images/products/sneakers.jpg?raw=true",
     title: "Sneakers",
     price: "$47.99",
@@ -16,7 +14,6 @@ const products = [
     slug: "nike-sneaker",
   },
   {
-    id: 3,
     img: "https://github.com/8kra/8kra-Ecommerce/blob/master/public/images/products/sunglasses.jpg?raw=true",
     title: "Black Sunglasses",
     price: "$40.00",
@@ -24,7 +21,6 @@ const products = [
     slug: "black-round-watch",
   },
   {
-    id: 4,
     img: "https://github.com/8kra/8kra-Ecommerce/blob/master/public/images/products/bag.jpg?raw=true",
     title: "Leather Backpack",
     price: "$67.99",
@@ -32,7 +28,6 @@ const products = [
     slug: "leather-backpack",
   },
   {
-    id: 5,
     img: "https://github.com/8kra/8kra-Ecommerce/blob/master/public/images/products/watch.jpg?raw=true",
     title: "Black Round Dial Watch",
     price: "$52.99",
@@ -40,7 +35,6 @@ const products = [
     slug: "black-round-watch",
   },
   {
-    id: 6,
     img: "https://github.com/8kra/8kra-Ecommerce/blob/master/public/images/products/sneakers.jpg?raw=true",
     title: "Sneakers",
     price: "$47.99",
@@ -48,7 +42,6 @@ const products = [
     slug: "nike-sneaker",
   },
   {
-    id: 7,
     img: "https://github.com/8kra/8kra-Ecommerce/blob/master/public/images/products/sunglasses.jpg?raw=true",
     title: "Black Sunglasses",
     price: "$40.00",
@@ -56,7 +49,6 @@ const products = [
     slug: "black-sunglasses",
   },
   {
-    id: 8,
     img: "https://github.com/8kra/8kra-Ecommerce/blob/master/public/images/products/bag.jpg?raw=true",
     title: "Leather Backpack",
     price: "$67.99",
@@ -67,33 +59,54 @@ const products = [
 
 const categories = [
   {
-    id: 1,
     name: "All",
   },
   {
-    id: 2,
     name: "Caps",
   },
   {
-    id: 3,
-    name: "Headphone",
+    name: "Watches",
   },
   {
-    id: 4,
-    name: "Laptop",
-  },
-  {
-    id: 5,
-    name: "Watch",
-  },
-  {
-    id: 6,
     name: "Jeans",
   },
   {
-    id: 7,
     name: "Shoes",
   },
 ];
 
-export { products, categories };
+const colors = [
+  {
+    name: "white",
+  },
+  {
+    name: "black",
+  },
+  {
+    name: "green",
+  },
+  {
+    name: "blue",
+  },
+  {
+    name: "navy blue",
+  },
+  {
+    name: "chrome",
+  },
+];
+
+const filters = [
+  {
+    name: "price (asc.)",
+  },
+  {
+    name: "price (desc.)",
+  },
+  {
+    name: "popularity (low-how)",
+  },
+  { name: "populartiy (high-low" },
+];
+
+export { products, categories, colors, filters };
