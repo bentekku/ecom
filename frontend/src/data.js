@@ -105,14 +105,17 @@ const colors = [
 const filters = [
   {
     name: "price (asc.)",
+    value: "price-low",
   },
   {
     name: "price (desc.)",
+    value: "price-high",
   },
   {
     name: "popularity (low-how)",
+    value: "pop-low",
   },
-  { name: "populartiy (high-low" },
+  { name: "populartiy (high-low)", value: "pop-high" },
 ];
 
 export { products, categories, colors, filters };

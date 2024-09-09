@@ -59,12 +59,26 @@ const Main = () => {
     }
 
     // Apply sorting based on the selected filter
-    if (selectedFilter === "price") {
-      updatedProducts = updatedProducts.sort((a, b) => a.price - b.price);
-    } else if (selectedFilter === "popularity") {
-      updatedProducts = updatedProducts.sort(
-        (a, b) => b.isMostPopular - a.isMostPopular
-      );
+    switch (selectedFilter) {
+      case "price-low":
+        updatedProducts = updatedProducts.sort((a, b) => a.price - b.price);
+        break;
+      case "price-high":
+        updatedProducts = updatedProducts.sort((a, b) => b.price - a.price);
+        break;
+      case "pop-low":
+        updatedProducts = updatedProducts.sort(
+          (a, b) => a.isMostPopular - b.isMostPopular
+        );
+        break;
+      case "pop-high":
+        updatedProducts = updatedProducts.sort(
+          (a, b) => b.isMostPopular - a.isMostPopular
+        );
+        break;
+      default:
+        // No sorting for "default" option
+        break;
     }
 
     setFilteredProducts(updatedProducts);
@@ -146,7 +160,7 @@ const Main = () => {
               >
                 <option value="default">Default</option>
                 {filters.map((filter, indx) => (
-                  <option value={filter.name.toLowerCase()} key={indx}>
+                  <option value={filter.value} key={indx}>
                     {filter.name}
                   </option>
                 ))}
