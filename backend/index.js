@@ -2,14 +2,16 @@ const express = require("express");
 const dotENV = require("./utils/dotEnv");
 const connectToDB = require("./utils/db");
 const productRoutes = require("./routes/productRoutes");
+const cors = require("cors");
 dotENV();
 
 const app = express();
 connectToDB();
 
-// Middleware and routes here...
+// Middlewares
 app.use(express.json());
 app.use("/api/products", productRoutes);
+app.use(cors()); // Allows cross-origin requests
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
