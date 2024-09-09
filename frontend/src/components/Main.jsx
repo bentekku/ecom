@@ -1,104 +1,67 @@
 import { useEffect, useState } from "react";
+
 import { CiSearch } from "react-icons/ci";
 import { categories, colors, filters } from "../data"; // Assuming categories is static
 import CategoryBubble from "./CategoryBubble";
 import Product from "./Product";
-import axios from "axios";
 import "../index.css";
+
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts, filterProducts } from "../slices/productSlice";
+import { setActiveCategory } from "../slices/categorySlice";
+import { setSelectedColor } from "../slices/colorSlice";
+import { setSelectedFilter } from "../slices/filterSlice";
+import { loadMore } from "../slices/visibilitySlice";
 
 const Main = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(5);
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [selectedColor, setSelectedColor] = useState(""); // Add state for selected color
-  const [selectedFilter, setSelectedFilter] = useState("default"); // Add state for selected filter
+
+  const dispatch = useDispatch();
+  const { items, filteredItems, status } = useSelector(
+    (state) => state.products
+  );
+  const activeCategory = useSelector((state) => state.category);
+  const selectedColor = useSelector((state) => state.color);
+  const selectedFilter = useSelector((state) => state.filter);
+  const visibleCount = useSelector((state) => state.visibility);
 
   // Fetch products when the component mounts
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await axios.get("/api/products");
-        setProducts(res.data);
-        setFilteredProducts(res.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+    if (status === "idle") {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, status]);
 
   // Handle search, category, color, and filter updates
   useEffect(() => {
-    let updatedProducts = products;
+    dispatch(
+      filterProducts({
+        searchTerm: searchTerm || "",
+        selectedFilter: selectedFilter || "default",
+        selectedColor: selectedColor || "all",
+        activeCategory: activeCategory || "all",
+        visibleCount: visibleCount || 5,
+      })
+    );
+  }, [searchTerm, activeCategory, selectedColor, selectedFilter, dispatch]);
 
-    // Handle search term
-    if (searchTerm.trim()) {
-      updatedProducts = updatedProducts.filter((prod) =>
-        prod.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Handle category
-    if (activeCategory !== "all") {
-      updatedProducts = updatedProducts.filter(
-        (prod) => prod.category.toLowerCase() === activeCategory
-      );
-    }
-
-    // Handle color
-    if (selectedColor) {
-      updatedProducts = updatedProducts.filter((prod) => {
-        const prodColors = Array.isArray(prod.color)
-          ? prod.color.map((color) => color.toLowerCase())
-          : [];
-        return prodColors.includes(selectedColor.toLowerCase());
-      });
-    }
-
-    // Apply sorting based on the selected filter
-    switch (selectedFilter) {
-      case "price-low":
-        updatedProducts = updatedProducts.sort((a, b) => a.price - b.price);
-        break;
-      case "price-high":
-        updatedProducts = updatedProducts.sort((a, b) => b.price - a.price);
-        break;
-      case "pop-low":
-        updatedProducts = updatedProducts.sort(
-          (a, b) => a.isMostPopular - b.isMostPopular
-        );
-        break;
-      case "pop-high":
-        updatedProducts = updatedProducts.sort(
-          (a, b) => b.isMostPopular - a.isMostPopular
-        );
-        break;
-      default:
-        // No sorting for "default" option
-        break;
-    }
-
-    setFilteredProducts(updatedProducts);
-  }, [searchTerm, products, activeCategory, selectedColor, selectedFilter]);
-
-  // Load more products
   const loadMoreHandler = () => {
-    setVisibleCount((prevCount) => prevCount + 5);
+    dispatch(loadMore());
   };
 
   const handleCategoryChange = (name) => {
-    setActiveCategory(name.toLowerCase());
+    console.log("Category selected:", name); // Debugging log
+    dispatch(setActiveCategory(name));
   };
 
   const handleColorChange = (e) => {
-    setSelectedColor(e.target.value);
+    console.log("Color selected:", e.target.value); // Debugging log
+    dispatch(setSelectedColor(e.target.value));
   };
 
   const handleFilterChange = (e) => {
-    setSelectedFilter(e.target.value);
+    console.log("Filter selected:", e.target.value); // Debugging log
+    dispatch(setSelectedFilter(e.target.value));
   };
 
   return (
@@ -142,7 +105,7 @@ const Main = () => {
                 className="border py-2 px-4 rounded outline-0 capitalize"
                 onChange={handleColorChange}
               >
-                <option value="">All Colors</option>
+                <option value="all">All Colors</option>
                 {colors.map((item, indx) => (
                   <option value={item.name} key={indx}>
                     {item.name}
@@ -171,13 +134,13 @@ const Main = () => {
 
         {/* PRODUCTS */}
         <div className="grid grid-cols-2 xl:grid-cols-5 lg:grid-cols-3 gap-9 p-4 z-20">
-          {filteredProducts &&
-            filteredProducts
+          {filteredItems &&
+            filteredItems
               .slice(0, visibleCount)
               .map((prod) => <Product data={prod} key={prod._id} />)}
         </div>
 
-        {visibleCount < filteredProducts.length && (
+        {visibleCount < filteredItems.length && (
           <div className="flex justify-center mt-4">
             <button
               className="px-6 py-2 bg-black text-white rounded-lg hover:drop-shadow-lg hover:scale-[110%] transition-all hover:font-bold ease-out"

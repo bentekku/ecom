@@ -21,8 +21,12 @@ const productSlice = createSlice({
   reducers: {
     filterProducts: (state, action) => {
       // Apply filters here
-      const { searchTerm, activeCategory, selectedColor, selectedFilter } =
-        action.payload;
+      const {
+        searchTerm = "",
+        activeCategory = "",
+        selectedColor = "",
+        selectedFilter = "",
+      } = action.payload;
       let updatedProducts = state.items;
 
       if (searchTerm.trim()) {
@@ -31,35 +35,52 @@ const productSlice = createSlice({
         );
       }
 
-      if (activeCategory !== "all") {
-        updatedProducts = updatedProducts.filter(
-          (prod) => prod.category.toLowerCase() === activeCategory
-        );
+      if (activeCategory) {
+        if (activeCategory === "all") {
+          updatedProducts = state.items;
+          console.log(updatedProducts);
+        } else {
+          updatedProducts = updatedProducts.filter(
+            (prod) =>
+              prod.category.toLowerCase() === activeCategory.toLowerCase()
+          );
+          console.log(updatedProducts);
+        }
       }
 
-      if (selectedColor) {
-        updatedProducts = updatedProducts.filter(
-          (prod) => prod.color.toLowerCase() === selectedColor
-        );
+      if (selectedColor !== "all") {
+        updatedProducts = updatedProducts.filter((prod) => {
+          if (Array.isArray(prod.color)) {
+            return prod.color.some(
+              (col) => col.toLowerCase() === selectedColor.toLowerCase()
+            );
+          }
+          return prod.color.toLowerCase() === selectedColor.toLowerCase();
+        });
       }
 
+      // Sorting
       switch (selectedFilter) {
         case "price-low":
-          updatedProducts = updatedProducts.sort((a, b) => a.price - b.price);
+          updatedProducts = [...updatedProducts].sort(
+            (a, b) => a.price - b.price
+          );
           break;
 
         case "price-high":
-          updatedProducts = updatedProducts.sort((a, b) => b.price - a.price);
+          updatedProducts = [...updatedProducts].sort(
+            (a, b) => b.price - a.price
+          );
           break;
 
         case "pop-low":
-          updatedProducts = updatedProducts.sort(
+          updatedProducts = [...updatedProducts].sort(
             (a, b) => a.isMostPopular - b.isMostPopular
           );
           break;
 
         case "pop-high":
-          updatedProducts = updatedProducts.sort(
+          updatedProducts = [...updatedProducts].sort(
             (a, b) => b.isMostPopular - a.isMostPopular
           );
           break;

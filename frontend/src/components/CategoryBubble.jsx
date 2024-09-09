@@ -9,7 +9,7 @@ const CategoryBubble = ({ data, activeComp, onClick }) => {
           ? "active-category"
           : "inactive-category"
       } transition-all`}
-      onClick={() => onClick(data.name)}
+      onClick={() => onClick(data.name.toLowerCase())}
     >
       <p>{data.name}</p>
     </div>
