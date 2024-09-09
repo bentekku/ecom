@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { Schema } = require("mongoose");
 
 // Schema
 const productSchema = new mongoose.Schema({
@@ -8,14 +7,18 @@ const productSchema = new mongoose.Schema({
     required: [true, "Please enter product name"],
     trim: true,
   },
-  img: {
+  imgURL: {
     type: String,
-    required: [true, "Please enter the url of the image"],
+    required: [true, "Please enter the URL of the image"],
+    match: [
+      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
+      "Please enter a valid URL for the image",
+    ],
   },
   price: {
     type: Number,
     required: [true, "Please enter product price"],
-    maxLength: [8, "Price cannot exceed 8 characters"],
+    max: [99999999, "Price cannot exceed 8 characters"], // Limit price to a max of 8 digits
   },
   description: {
     type: String,
@@ -31,7 +34,7 @@ const productSchema = new mongoose.Schema({
   },
   brand: {
     type: String,
-    required: [true, "Please enter product colors"],
+    required: [true, "Please enter product brand"],
     trim: true,
   },
   isMostPopular: {

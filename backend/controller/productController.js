@@ -31,8 +31,16 @@ const getProductById = async (req, res) => {
 // @route   POST /api/products
 // @access  Private
 const createProduct = async (req, res) => {
-  const { name, price, description, category, color, brand, isMostPopular } =
-    req.body;
+  const {
+    name,
+    price,
+    description,
+    category,
+    color,
+    brand,
+    imgURL,
+    isMostPopular,
+  } = req.body;
 
   try {
     const product = new Product({
@@ -42,6 +50,7 @@ const createProduct = async (req, res) => {
       category,
       color,
       brand,
+      imgURL,
       isMostPopular,
     });
     await product.save();
