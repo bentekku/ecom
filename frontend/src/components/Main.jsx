@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { categories, products } from "../data";
 import CategoryBubble from "./CategoryBubble";
 import Product from "./Product";
+import axios from "axios";
 
 const Main = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState(products);
+  useEffect(() => {
+    const res = getAllProducts();
+    setFilteredProducts(res);
+  }, []);
 
   const searchHandler = () => {
     // Check if searchTerm is not empty
@@ -68,6 +73,12 @@ const Main = () => {
       </div>
     </div>
   );
+};
+
+const getAllProducts = async () => {
+  const response = await axios.get("/api/products");
+
+  return response;
 };
 
 export default Main;
