@@ -1,6 +1,7 @@
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import Order from "./pages/Order";
+import NotFound from "./pages/404";
 // import Favourites from "./pages/Favourites";
 
 // react router dom
@@ -17,10 +18,9 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/products/:id" element={<SingleProductPage />} />
           <Route path="/order" element={<Order />} />
-          {/* <Route path="/favourite" element={<Favourites />} /> */}
 
           {/* 404 route for any unmatched paths */}
-          {/* <Route path="*" element={<NotFound />} /> */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </>
