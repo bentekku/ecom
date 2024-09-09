@@ -1,7 +1,7 @@
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import Order from "./pages/Order";
-import Favourites from "./pages/Favourites";
+// import Favourites from "./pages/Favourites";
 
 // react router dom
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -17,7 +17,7 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/products/:id" element={<SingleProductPage />} />
           <Route path="/order" element={<Order />} />
-          <Route path="/favourite" element={<Favourites />} />
+          {/* <Route path="/favourite" element={<Favourites />} /> */}
 
           {/* 404 route for any unmatched paths */}
           {/* <Route path="*" element={<NotFound />} /> */}

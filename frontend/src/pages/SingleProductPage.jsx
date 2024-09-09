@@ -8,6 +8,7 @@ const SingleProductPage = () => {
   const [productDetails, setProductDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
 
   useEffect(() => {
@@ -27,6 +28,21 @@ const SingleProductPage = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
+
+  const handleQuantityClick = (str) => {
+    switch (str) {
+      case "plus":
+        if (quantity < 15) setQuantity((prev) => prev + 1);
+        break;
+
+      case "minus":
+        if (quantity > 1) setQuantity((prev) => prev - 1);
+        break;
+
+      default:
+        break;
+    }
+  };
 
   return (
     <>
@@ -67,14 +83,30 @@ const SingleProductPage = () => {
                   <select
                     name="colors"
                     id="colorSelection"
-                    className="capitalize border p-2 rounded-md ml-2 mr-2"
+                    className="capitalize border p-2 rounded-md ml-2 mr-2 outline-0"
                   >
-                    {productDetails.color.map((colItem) => (
-                      <option name={colItem} key={productDetails.color.length}>
+                    {productDetails.color.map((colItem, indx) => (
+                      <option name={colItem} key={indx}>
                         {colItem}
                       </option>
                     ))}
                   </select>
+                  <div className="flex items-center mt-4">
+                    <p className="mr-2">Quantity:</p>
+                    <button
+                      className="border px-1 rounded-sm"
+                      onClick={() => handleQuantityClick("minus")}
+                    >
+                      -
+                    </button>
+                    <p className="ml-4 mr-4">{quantity}</p>
+                    <button
+                      className="border px-1 rounded-sm"
+                      onClick={() => handleQuantityClick("plus")}
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
 
                 <button className="border py-2 px-5 rounded bg-black text-white font-medium cursor-pointer w-[12rem]">

@@ -8,7 +8,7 @@ const Sidebar = () => {
     <div className="fixed top-0 left-0 h-screen p-2 bg-gray-100">
       <ul className="p-5 space-y-8">
         <li>
-          <button>
+          <button className="cursor-default">
             <HiOutlineMenuAlt2 size={"1.5rem"} />
           </button>
         </li>
@@ -28,21 +28,21 @@ const Sidebar = () => {
           </Link>
         </li>
 
-        <li>
+        {/* <li>
           <Link to={"/order"}>
             <button>
               <CiDeliveryTruck size={"1.5rem"} />
             </button>
           </Link>
-        </li>
+        </li> */}
 
-        <li>
+        {/* <li>
           <Link to={"/favourite"}>
             <button>
               <IoHeartOutline size={"1.5rem"} />
             </button>
           </Link>
-        </li>
+        </li> */}
       </ul>
     </div>
   );
