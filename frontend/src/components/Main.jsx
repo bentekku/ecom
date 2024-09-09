@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { CiSearch } from "react-icons/ci";
-import { categories, colors, filters } from "../data"; // Assuming categories is static
+import { categories, colors, filters } from "../data";
 import CategoryBubble from "./CategoryBubble";
 import Product from "./Product";
 import "../index.css";

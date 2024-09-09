@@ -4,6 +4,7 @@ import categoryReducer from "../slices/categorySlice";
 import colorReducer from "../slices/colorSlice";
 import filterReducer from "../slices/filterSlice";
 import visibilityReducer from "../slices/visibilitySlice";
+import cartReducer from "../slices/cartSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     color: colorReducer,
     filter: filterReducer,
     visibility: visibilityReducer,
+    cart: cartReducer,
   },
 });
 

@@ -1,48 +1,48 @@
-import { useState } from "react";
-import Sidebar from "../components/Sidebar";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchProductDetails,
+  incrementQuantity,
+  decrementQuantity,
+  addToCart,
+} from "../slices/cartSlice";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 
 const SingleProductPage = () => {
-  const [productDetails, setProductDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch();
   const { id } = useParams();
+  const { productDetails, quantity, loading, error } = useSelector(
+    (state) => state.cart
+  );
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`/api/products/${id}`);
-        setProductDetails(response.data);
-      } catch (err) {
-        setError("Error fetching product details, ", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    dispatch(fetchProductDetails(id));
+  }, [id, dispatch]);
 
-    fetchData();
-  }, [id]);
+  const handleQuantityClick = (str) => {
+    if (str === "plus") {
+      dispatch(incrementQuantity());
+    } else if (str === "minus") {
+      dispatch(decrementQuantity());
+    }
+  };
+
+  const handleAddToCart = () => {
+    // Directly pass parameters to addToCart
+    dispatch(
+      addToCart({
+        id: productDetails._id,
+        name: productDetails.name,
+        price: productDetails.price,
+        quantity: quantity,
+        imgURL: productDetails.imgURL,
+      })
+    );
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
-
-  const handleQuantityClick = (str) => {
-    switch (str) {
-      case "plus":
-        if (quantity < 15) setQuantity((prev) => prev + 1);
-        break;
-
-      case "minus":
-        if (quantity > 1) setQuantity((prev) => prev - 1);
-        break;
-
-      default:
-        break;
-    }
-  };
 
   return (
     <>
@@ -109,7 +109,10 @@ const SingleProductPage = () => {
                   </div>
                 </div>
 
-                <button className="border py-2 px-5 rounded bg-black text-white font-medium cursor-pointer w-[12rem]">
+                <button
+                  className="border py-2 px-5 rounded bg-black text-white font-medium cursor-pointer w-[12rem]"
+                  onClick={handleAddToCart}
+                >
                   Add to cart
                 </button>
               </div>

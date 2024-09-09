@@ -1,7 +1,19 @@
 import Sidebar from "../components/Sidebar";
 import CartItems from "../components/CartItems";
+import { useDispatch, useSelector } from "react-redux";
 
 const Cart = () => {
+  const dispatch = useDispatch();
+  const { itemsInCart } = useSelector((state) => state.cart);
+
+  // Calculate the total price for the cart items
+  const getTotalPrice = () => {
+    return itemsInCart.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+  };
+
   return (
     <div>
       <Sidebar />
@@ -29,7 +41,10 @@ const Cart = () => {
                   </h1>
                   <div className="flex flex-col h-full w-full  py-24 px-2 justify-between">
                     <p className="text-xl font-medium flex justify-between px-8">
-                      Sub-Total: <span className="font-light">$72.00</span>
+                      Sub-Total:{" "}
+                      <span className="font-light">
+                        ${getTotalPrice().toFixed(2)}
+                      </span>
                     </p>
                     <hr />
                     <p className="text-xl font-medium flex justify-between px-8">
@@ -38,11 +53,16 @@ const Cart = () => {
                     <hr />
                     <p className="text-xl font-medium flex justify-between px-8">
                       Delivery Charges:{" "}
-                      <span className="font-light">$5.00</span>
+                      <span className="font-light">
+                        ${itemsInCart.length > 0 ? "5.00" : "0.00"}
+                      </span>
                     </p>
                     <hr />
                     <p className="text-xl font-medium flex justify-between px-8">
-                      Total: <span className="font-light">$77.00</span>
+                      Total:{" "}
+                      <span className="font-light">
+                        ${(getTotalPrice() + 5).toFixed(2) || "0.00"}
+                      </span>
                     </p>
                     <button className="border border-black bg-white text-black font-medium text-lg p-5 rounded-md hover:bg-black hover:text-white transition-all">
                       Proceed with Payment
