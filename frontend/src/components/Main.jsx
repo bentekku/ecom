@@ -30,30 +30,30 @@ const Main = () => {
     fetchProducts();
   }, []);
 
-  // Handle search, category, and color filtering
+  // Handle search, category, color, and filter updates
   useEffect(() => {
     let updatedProducts = products;
 
+    // Handle search term
     if (searchTerm.trim()) {
       updatedProducts = updatedProducts.filter((prod) =>
         prod.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
+    // Handle category
     if (activeCategory !== "all") {
       updatedProducts = updatedProducts.filter(
         (prod) => prod.category.toLowerCase() === activeCategory
       );
     }
 
+    // Handle color
     if (selectedColor) {
-      console.log(`Filtering by color: ${selectedColor}`); // Debugging
       updatedProducts = updatedProducts.filter((prod) => {
-        // Ensure color is an array and check if it includes the selected color
         const prodColors = Array.isArray(prod.color)
           ? prod.color.map((color) => color.toLowerCase())
           : [];
-        console.log(`Product colors: ${prodColors}`); // Debugging
         return prodColors.includes(selectedColor.toLowerCase());
       });
     }
