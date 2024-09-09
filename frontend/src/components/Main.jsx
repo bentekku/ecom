@@ -8,9 +8,9 @@ import "../index.css";
 
 const Main = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [products, setProducts] = useState([]); // Store all products fetched from the backend
-  const [filteredProducts, setFilteredProducts] = useState([]); // Store the filtered list
-  const [visibleCount, setVisibleCount] = useState(5); // Number of products to show initially
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(5);
   const [activeCategory, setActiveCategory] = useState("all");
 
   // Fetch products when the component mounts
@@ -18,33 +18,38 @@ const Main = () => {
     const fetchProducts = async () => {
       try {
         const res = await axios.get("/api/products");
-        setProducts(res.data); // Set products state with the fetched data
-        setFilteredProducts(res.data); // Initially set filteredProducts to all products
+        setProducts(res.data);
+        setFilteredProducts(res.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
 
     fetchProducts();
+  }, []);
 
-    console.log("Active Category Right now: " + activeCategory);
-  }, []); // Empty dependency array to run only once on mount
-
-  // Handle the search functionality
+  // Handle search and category filtering
   useEffect(() => {
+    let updatedProducts = products;
+
     if (searchTerm.trim()) {
-      const filteredArray = products.filter((prod) =>
+      updatedProducts = updatedProducts.filter((prod) =>
         prod.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
-      setFilteredProducts(filteredArray.length > 0 ? filteredArray : products);
-    } else {
-      setFilteredProducts(products); // Reset to all products if search is cleared
     }
-  }, [searchTerm, products]); // Only run this effect when searchTerm or products change
+
+    if (activeCategory !== "all") {
+      updatedProducts = updatedProducts.filter(
+        (prod) => prod.category.toLowerCase() === activeCategory
+      );
+    }
+
+    setFilteredProducts(updatedProducts);
+  }, [searchTerm, products, activeCategory]);
 
   // Load more products
   const loadMoreHandler = () => {
-    setVisibleCount((prevCount) => prevCount + 5); // Increase the visible count by 5
+    setVisibleCount((prevCount) => prevCount + 5);
   };
 
   const handleCategoryChange = (name) => {
@@ -69,10 +74,10 @@ const Main = () => {
           </div>
         </div>
 
-        {/* CATEOGORIES AND FILTERS WRAPPER */}
+        {/* CATEGORIES AND FILTERS WRAPPER */}
         <div className="flex items-center justify-between px-10">
           {/* CATEGORIES */}
-          <div className=" bg-white flex items-center justify-center space-x-12 px-5 py-10">
+          <div className="bg-white flex items-center justify-center space-x-12 px-5 py-10">
             {categories.map((cat, indx) => (
               <CategoryBubble
                 data={cat}

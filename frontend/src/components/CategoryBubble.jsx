@@ -5,8 +5,10 @@ const CategoryBubble = ({ data, activeComp, onClick }) => {
   return (
     <div
       className={`px-5 py-2 rounded-full drop-shadow-xl cursor-pointer ${
-        activeComp === data.name.toLowerCase() ? "active" : "inactive"
-      }`}
+        activeComp === data.name.toLowerCase()
+          ? "active-category"
+          : "inactive-category"
+      } transition-all`}
       onClick={() => onClick(data.name)}
     >
       <p>{data.name}</p>
