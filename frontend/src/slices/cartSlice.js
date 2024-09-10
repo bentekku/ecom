@@ -1,75 +1,48 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
-// Async thunk for fetching product details
+// Thunk to fetch product details (example)
 export const fetchProductDetails = createAsyncThunk(
   "cart/fetchProductDetails",
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(`/api/products/${id}`);
-      return response.data;
-    } catch (err) {
-      return rejectWithValue("Error fetching product details");
-    }
+  async (productId) => {
+    const response = await fetch(`/api/products/${productId}`); // Update with your API endpoint
+    const data = await response.json();
+    return data;
   }
 );
 
-const initialState = {
-  productDetails: null,
-  quantity: 1,
-  itemsInCart: JSON.parse(localStorage.getItem("itemsInCart")) || [], // Initialize from localStorage
-  loading: false,
-  error: null,
-};
-
 const cartSlice = createSlice({
   name: "cart",
-  initialState,
+  initialState: {
+    itemsInCart: [],
+    productDetails: null,
+    quantity: 1, // Initial quantity
+    loading: false,
+    error: null,
+  },
   reducers: {
     incrementQuantity: (state) => {
-      if (state.quantity < 15) state.quantity += 1;
+      state.quantity += 1; // Increase quantity
     },
     decrementQuantity: (state) => {
-      if (state.quantity > 1) state.quantity -= 1;
-    },
-    resetCart: (state) => {
-      state.productDetails = null;
-      state.quantity = 1;
-      state.loading = false;
-      state.error = null;
-      state.itemsInCart = []; // Clear cart
-      localStorage.removeItem("itemsInCart"); // Clear localStorage
+      if (state.quantity > 1) {
+        state.quantity -= 1; // Decrease quantity but keep it above 1
+      }
     },
     addToCart: (state, action) => {
-      const { id, name, price, quantity, imgURL } = action.payload;
-
-      const existingItemIndex = state.itemsInCart.findIndex(
-        (cartItem) => cartItem.id === id
-      );
-
-      if (existingItemIndex >= 0) {
-        state.itemsInCart[existingItemIndex].quantity += quantity;
-      } else {
-        state.itemsInCart.push({ id, name, price, quantity, imgURL });
-      }
-
-      localStorage.setItem("itemsInCart", JSON.stringify(state.itemsInCart)); // Save to localStorage
+      const product = action.payload;
+      state.itemsInCart.push(product); // Add the product to the cart
     },
     removeFromCart: (state, action) => {
-      const index = state.itemsInCart.findIndex(
-        (item) => item.id === action.payload
-      );
-      if (index !== -1) {
-        state.itemsInCart.splice(index, 1);
-        localStorage.setItem("itemsInCart", JSON.stringify(state.itemsInCart)); // Save to localStorage
-      }
+      const productId = action.payload;
+      state.itemsInCart = state.itemsInCart.filter(
+        (item) => item.id !== productId
+      ); // Remove the product from the cart
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProductDetails.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(fetchProductDetails.fulfilled, (state, action) => {
         state.loading = false;
@@ -77,7 +50,7 @@ const cartSlice = createSlice({
       })
       .addCase(fetchProductDetails.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message;
       });
   },
 });
@@ -85,7 +58,6 @@ const cartSlice = createSlice({
 export const {
   incrementQuantity,
   decrementQuantity,
-  resetCart,
   addToCart,
   removeFromCart,
 } = cartSlice.actions;

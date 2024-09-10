@@ -2,6 +2,7 @@ const express = require("express");
 const dotENV = require("./utils/dotEnv");
 const connectToDB = require("./utils/db");
 const productRoutes = require("./routes/productRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 const cors = require("cors");
 dotENV();
 
@@ -11,6 +12,7 @@ connectToDB();
 // Middlewares
 app.use(express.json());
 app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
 app.use(cors()); // Allows cross-origin requests
 
 const PORT = process.env.PORT || 5000;

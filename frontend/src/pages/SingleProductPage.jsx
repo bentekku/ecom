@@ -11,38 +11,43 @@ import Sidebar from "../components/Sidebar";
 
 const SingleProductPage = () => {
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { id } = useParams(); // Handles dynamic slugs
   const { productDetails, quantity, loading, error } = useSelector(
     (state) => state.cart
   );
 
+  // Fetch product details based on the dynamic slug (id)
   useEffect(() => {
-    dispatch(fetchProductDetails(id));
+    if (id) {
+      dispatch(fetchProductDetails(id));
+    }
   }, [id, dispatch]);
 
-  const handleQuantityClick = (str) => {
-    if (str === "plus") {
+  // Handle quantity change when buttons are clicked
+  const handleQuantityClick = (action) => {
+    if (action === "plus") {
       dispatch(incrementQuantity());
-    } else if (str === "minus") {
+    } else if (action === "minus") {
       dispatch(decrementQuantity());
     }
   };
 
+  // Handle adding the product to the cart with the selected quantity and color
   const handleAddToCart = () => {
-    // Directly pass parameters to addToCart
     dispatch(
       addToCart({
         id: productDetails._id,
         name: productDetails.name,
         price: productDetails.price,
-        quantity: quantity,
+        quantity: quantity, // Quantity stored in Redux
         imgURL: productDetails.imgURL,
+        color: document.getElementById("colorSelection").value, // Get selected color from the dropdown
       })
     );
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <p>Loading...</p>; // Loading state
+  if (error) return <p>{error}</p>; // Error handling
 
   return (
     <>
@@ -59,19 +64,13 @@ const SingleProductPage = () => {
                 src={productDetails.imgURL}
                 alt={productDetails.name}
                 className="object-cover h-[640px]"
-                loading="lazy"
+                loading="lazy" // Lazy loading for better performance
               />
             </div>
             <div className="flex flex-col self-start border-0 border-red-500 w-full h-full ml-10 flex-1 p-8">
               <h2 className="text-4xl font-thin">{productDetails.name}</h2>
               <p className="mt-6 max-w-[70%]">
-                {/* {productDetails.description} */}
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Aliquam deleniti explicabo voluptatum magnam adipisci quae,
-                excepturi aut eligendi pariatur expedita, natus id cumque
-                officia nihil asperiores hic, commodi dolor aperiam laboriosam
-                laudantium quaerat! Autem distinctio modi minima et nostrum
-                officiis?
+                {productDetails.description || "No description available"}
               </p>
               <p className="mt-12 text-2xl font-base">
                 ${productDetails.price}
@@ -85,17 +84,24 @@ const SingleProductPage = () => {
                     id="colorSelection"
                     className="capitalize border p-2 rounded-md ml-2 mr-2 outline-0"
                   >
-                    {productDetails.color.map((colItem, indx) => (
-                      <option name={colItem} key={indx}>
-                        {colItem}
-                      </option>
-                    ))}
+                    {productDetails.color.length > 0 ? (
+                      productDetails.color.map((colItem, indx) => (
+                        <option name={colItem} key={indx}>
+                          {colItem}
+                        </option>
+                      ))
+                    ) : (
+                      <option>No colors available</option>
+                    )}
                   </select>
+
+                  {/* Quantity controls */}
                   <div className="flex items-center mt-4">
                     <p className="mr-2">Quantity:</p>
                     <button
                       className="border px-1 rounded-sm"
                       onClick={() => handleQuantityClick("minus")}
+                      disabled={quantity <= 1} // Disable when quantity is 1
                     >
                       -
                     </button>
@@ -109,6 +115,7 @@ const SingleProductPage = () => {
                   </div>
                 </div>
 
+                {/* Add to Cart button */}
                 <button
                   className="border py-2 px-5 rounded bg-black text-white font-medium cursor-pointer w-[12rem]"
                   onClick={handleAddToCart}

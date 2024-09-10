@@ -1,11 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
+import { removeFromCart } from "../slices/cartSlice"; // Now, this will work
 
 const CartItems = () => {
   const dispatch = useDispatch();
-  const { itemsInCart, removeFromCart } = useSelector((state) => state.cart);
+  const { itemsInCart } = useSelector((state) => state.cart);
 
   const handleRemove = (id) => {
-    dispatch(removeFromCart(id));
+    dispatch(removeFromCart(id)); // This will call the removeFromCart action
   };
 
   return (
@@ -13,7 +14,7 @@ const CartItems = () => {
       {itemsInCart.length > 0 ? (
         itemsInCart.map((item) => (
           <div
-            key={item.id}
+            key={item._id}
             className="flex items-center justify-between mb-4 border-b border-gray-300 pb-4"
           >
             <img
@@ -30,7 +31,7 @@ const CartItems = () => {
               ${(item.price * item.quantity).toFixed(2)}
             </p>
             <button
-              onClick={() => handleRemove(item.id)}
+              onClick={() => handleRemove(item._id)}
               className="border border-black text-black font-medium hover:text-white hover:bg-black py-1 px-3 rounded-md mx-6  transition-colors"
             >
               X

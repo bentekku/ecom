@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { CiSearch } from "react-icons/ci";
 import { categories, colors, filters } from "../data";
 import CategoryBubble from "./CategoryBubble";
@@ -15,6 +14,8 @@ import { loadMore } from "../slices/visibilitySlice";
 
 const Main = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [isSuggestionsVisible, setIsSuggestionsVisible] = useState(false);
 
   const dispatch = useDispatch();
   const { items, filteredItems, status } = useSelector(
@@ -25,14 +26,12 @@ const Main = () => {
   const selectedFilter = useSelector((state) => state.filter);
   const visibleCount = useSelector((state) => state.visibility);
 
-  // Fetch products when the component mounts
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
     }
   }, [dispatch, status]);
 
-  // Handle search, category, color, and filter updates
   useEffect(() => {
     dispatch(
       filterProducts({
@@ -50,18 +49,44 @@ const Main = () => {
   };
 
   const handleCategoryChange = (name) => {
-    console.log("Category selected:", name); // Debugging log
+    console.log("Category selected:", name);
     dispatch(setActiveCategory(name));
   };
 
   const handleColorChange = (e) => {
-    console.log("Color selected:", e.target.value); // Debugging log
+    console.log("Color selected:", e.target.value);
     dispatch(setSelectedColor(e.target.value));
   };
 
   const handleFilterChange = (e) => {
-    console.log("Filter selected:", e.target.value); // Debugging log
+    console.log("Filter selected:", e.target.value);
     dispatch(setSelectedFilter(e.target.value));
+  };
+
+  // Handle search input and suggestions
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    // Filter suggestions from the items
+    if (value.length > 1) {
+      const filteredSuggestions = items
+        .filter((item) => item.name.toLowerCase().includes(value.toLowerCase()))
+        .map((item) => item.name);
+
+      setSuggestions([...new Set(filteredSuggestions)]); // Unique suggestions
+      setIsSuggestionsVisible(true);
+    } else {
+      setSuggestions([]);
+      setIsSuggestionsVisible(false);
+    }
+  };
+
+  // Handle suggestion click
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion);
+    setSuggestions([]);
+    setIsSuggestionsVisible(false);
   };
 
   return (
@@ -69,22 +94,34 @@ const Main = () => {
       <div className="sticky top-0 z-10">
         <div className="header flex justify-between items-center p-4 bg-white">
           <h1 className="text-3xl font-bold">Peter Miles</h1>
-          <div className="search flex justify-between items-center px-5 py-2 bg-gray-100 rounded">
+          <div className="search flex justify-between items-center px-5 py-2 bg-gray-100 rounded relative">
             <input
               type="text"
               placeholder="Search product"
               className="bg-transparent outline-0"
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
             <button>
               <CiSearch />
             </button>
+            {isSuggestionsVisible && (
+              <div className="absolute bg-white border border-gray-300 rounded mt-2 w-full max-h-48 overflow-auto z-20">
+                {suggestions.map((suggestion, index) => (
+                  <div
+                    key={index}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleSuggestionClick(suggestion)}
+                  >
+                    {suggestion}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* CATEGORIES AND FILTERS WRAPPER */}
         <div className="flex items-center justify-between px-10">
-          {/* CATEGORIES */}
           <div className="bg-white flex items-center justify-center space-x-12 px-5 py-10">
             {categories.map((cat, indx) => (
               <CategoryBubble
@@ -95,9 +132,7 @@ const Main = () => {
               />
             ))}
           </div>
-          {/* FILTERS */}
           <div className="bg-white flex items-center justify-center space-x-12 px-5 py-10">
-            {/* COLOR */}
             <div>
               <span className="mr-2">Color</span>
               <select
@@ -113,7 +148,6 @@ const Main = () => {
                 ))}
               </select>
             </div>
-            {/* PRICE/POPULARITY */}
             <div>
               <span className="mr-2">Filter</span>
               <select
@@ -132,7 +166,6 @@ const Main = () => {
           </div>
         </div>
 
-        {/* PRODUCTS */}
         <div className="grid grid-cols-2 xl:grid-cols-5 lg:grid-cols-3 gap-9 p-4 z-20">
           {filteredItems &&
             filteredItems
