@@ -1,18 +1,14 @@
-import { useSelector, useDispatch } from "react-redux";
-import { removeFromCart } from "../slices/cartSlice"; // Now, this will work
+import { useDispatch } from "react-redux";
+import { removeFromCart } from "../slices/cartSlice";
 import axios from "axios";
 
-const CartItems = () => {
+const CartItems = ({ itemsInCart = [] }) => {
   const dispatch = useDispatch();
-  const { itemsInCart, setCartItems, cartItems } = useSelector(
-    (state) => state.cart
-  );
 
   const handleRemove = async (id) => {
     try {
       await axios.delete(`/api/orders/remove/${id}`);
-      // Remove item from local state
-      setCartItems(cartItems.filter((item) => item._id !== id));
+      dispatch(removeFromCart(id));
     } catch (error) {
       console.error("Failed to remove item", error);
     }
@@ -41,7 +37,7 @@ const CartItems = () => {
             </p>
             <button
               onClick={() => handleRemove(item._id)}
-              className="border border-black text-black font-medium hover:text-white hover:bg-black py-1 px-3 rounded-md mx-6  transition-colors"
+              className="border border-black text-black font-medium hover:text-white hover:bg-black py-1 px-3 rounded-md mx-6 transition-colors"
             >
               X
             </button>

@@ -18,9 +18,18 @@ router.post("/add", async (req, res) => {
 router.delete("/remove/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    await Order.findByIdAndDelete(id);
+    console.log(`Deleting item with ID: ${id}`); // Add logging
+    const result = await Order.findByIdAndDelete(id);
+
+    if (!result) {
+      console.log("Item not found");
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    console.log("Item deleted successfully");
     res.status(200).json({ message: "Item removed from cart" });
   } catch (error) {
+    console.error("Error deleting item:", error); // Add logging
     res.status(500).json({ message: "Failed to remove item from cart" });
   }
 });

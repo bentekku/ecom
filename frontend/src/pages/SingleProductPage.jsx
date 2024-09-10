@@ -4,7 +4,7 @@ import {
   incrementQuantity,
   decrementQuantity,
   addToCart,
-} from "../slices/cartSlice";
+} from "../slices/cartSlice"; // Ensure the path is correct
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
@@ -12,12 +12,11 @@ import axios from "axios";
 
 const SingleProductPage = () => {
   const dispatch = useDispatch();
-  const { id } = useParams(); // Handles dynamic slugs
+  const { id } = useParams();
   const { productDetails, quantity, loading, error } = useSelector(
     (state) => state.cart
   );
 
-  // Fetch product details based on the dynamic slug (id)
   useEffect(() => {
     if (id) {
       dispatch(fetchProductDetails(id));
@@ -39,7 +38,7 @@ const SingleProductPage = () => {
       await axios.post(
         "/api/orders/add",
         {
-          id: productDetails._id,
+          // id: productDetails._id,
           name: productDetails.name,
           price: productDetails.price,
           img: productDetails.imgURL,

@@ -11,8 +11,11 @@ import { setActiveCategory } from "../slices/categorySlice";
 import { setSelectedColor } from "../slices/colorSlice";
 import { setSelectedFilter } from "../slices/filterSlice";
 import { loadMore } from "../slices/visibilitySlice";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Main = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isSuggestionsVisible, setIsSuggestionsVisible] = useState(false);
@@ -83,10 +86,29 @@ const Main = () => {
   };
 
   // Handle suggestion click
-  const handleSuggestionClick = (suggestion) => {
-    setSearchTerm(suggestion);
-    setSuggestions([]);
-    setIsSuggestionsVisible(false);
+  // const handleSuggestionClick = (suggestion) => {
+  //   setSearchTerm(suggestion);
+  //   setSuggestions([]);
+  //   setIsSuggestionsVisible(false);
+  // };
+  const handleSuggestionClick = async (suggestion) => {
+    try {
+      const response = await axios.get(
+        `/api/products/name/${encodeURIComponent(suggestion)}`
+      );
+      const product = response.data;
+
+      if (product && product._id) {
+        // Assuming you use react-router
+        navigate(`/products/${product._id}`);
+        // For Next.js, use:
+        // router.push(`/product/${product._id}`);
+      } else {
+        console.error("Product not found");
+      }
+    } catch (error) {
+      console.error("Failed to fetch product by name:", error);
+    }
   };
 
   return (
@@ -106,7 +128,7 @@ const Main = () => {
               <CiSearch />
             </button>
             {isSuggestionsVisible && (
-              <div className="absolute bg-white border border-gray-300 rounded mt-2 w-full max-h-48 overflow-auto z-20">
+              <div className="absolute top-[2rem] right-[0rem] bg-white border border-gray-300 rounded mt-2 w-full max-h-48 overflow-auto z-20">
                 {suggestions.map((suggestion, index) => (
                   <div
                     key={index}

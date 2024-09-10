@@ -1,26 +1,19 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCartItems } from "../slices/cartSlice";
 import Sidebar from "../components/Sidebar";
 import CartItems from "../components/CartItems";
-import axios from "axios";
 
 const Cart = () => {
-  const { itemsInCart } = useSelector((state) => state.cart);
-  const [cartItems, setCartItems] = useState([]);
+  const dispatch = useDispatch();
+  const { itemsInCart, loading, error } = useSelector((state) => state.cart);
 
   useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        const response = await axios.get("/api/orders");
-        const data = await response.data;
-        setCartItems(data);
-      } catch (error) {
-        console.error("Failed to fetch cart items", error);
-      }
-    };
+    dispatch(fetchCartItems());
+  }, [dispatch]);
 
-    fetchCartItems();
-  }, []);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   // Calculate the total price for the cart items
   const getTotalPrice = () => {
@@ -52,7 +45,7 @@ const Cart = () => {
             <div className="flex justify-between w-full h-full p-8">
               <div className="left-section flex-1">
                 {/* CART ITEMS */}
-                <CartItems />
+                <CartItems itemsInCart={itemsInCart} />
               </div>
 
               <div className="right-section h-full w-[580px]">

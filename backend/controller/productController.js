@@ -96,10 +96,26 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// @desc    Get product by name
+// @route   GET /api/products/name/:name
+// @access  Public
+const getProductByName = async (req, res) => {
+  try {
+    const product = await Product.findOne({ name: req.params.name });
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json(product);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
   createProduct,
   updateProduct,
   deleteProduct,
+  getProductByName,
 };
