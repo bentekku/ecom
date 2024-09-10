@@ -1,9 +1,26 @@
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Sidebar from "../components/Sidebar";
 import CartItems from "../components/CartItems";
-import { useSelector } from "react-redux";
+import axios from "axios";
 
 const Cart = () => {
-  const { itemsInCart } = useSelector((state) => state.cart); // Accessing cart items from state
+  const { itemsInCart } = useSelector((state) => state.cart);
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      try {
+        const response = await axios.get("/api/orders");
+        const data = await response.data;
+        setCartItems(data);
+      } catch (error) {
+        console.error("Failed to fetch cart items", error);
+      }
+    };
+
+    fetchCartItems();
+  }, []);
 
   // Calculate the total price for the cart items
   const getTotalPrice = () => {

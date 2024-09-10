@@ -8,6 +8,7 @@ import {
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import axios from "axios";
 
 const SingleProductPage = () => {
   const dispatch = useDispatch();
@@ -33,17 +34,28 @@ const SingleProductPage = () => {
   };
 
   // Handle adding the product to the cart with the selected quantity and color
-  const handleAddToCart = () => {
-    dispatch(
-      addToCart({
-        id: productDetails._id,
-        name: productDetails.name,
-        price: productDetails.price,
-        quantity: quantity, // Quantity stored in Redux
-        imgURL: productDetails.imgURL,
-        color: document.getElementById("colorSelection").value, // Get selected color from the dropdown
-      })
-    );
+  const handleAddToCart = async () => {
+    try {
+      await axios.post(
+        "/api/orders/add",
+        {
+          id: productDetails._id,
+          name: productDetails.name,
+          price: productDetails.price,
+          img: productDetails.imgURL,
+          quantity: quantity,
+          color: document.getElementById("colorSelection").value,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      dispatch(addToCart({ ...productDetails, quantity }));
+    } catch (error) {
+      console.error("Failed to add item to cart", error);
+    }
   };
 
   if (loading) return <p>Loading...</p>; // Loading state

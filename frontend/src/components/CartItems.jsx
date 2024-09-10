@@ -1,12 +1,21 @@
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart } from "../slices/cartSlice"; // Now, this will work
+import axios from "axios";
 
 const CartItems = () => {
   const dispatch = useDispatch();
-  const { itemsInCart } = useSelector((state) => state.cart);
+  const { itemsInCart, setCartItems, cartItems } = useSelector(
+    (state) => state.cart
+  );
 
-  const handleRemove = (id) => {
-    dispatch(removeFromCart(id)); // This will call the removeFromCart action
+  const handleRemove = async (id) => {
+    try {
+      await axios.delete(`/api/orders/remove/${id}`);
+      // Remove item from local state
+      setCartItems(cartItems.filter((item) => item._id !== id));
+    } catch (error) {
+      console.error("Failed to remove item", error);
+    }
   };
 
   return (

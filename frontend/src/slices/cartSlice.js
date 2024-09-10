@@ -29,14 +29,13 @@ const cartSlice = createSlice({
       }
     },
     addToCart: (state, action) => {
-      const product = action.payload;
-      state.itemsInCart.push(product); // Add the product to the cart
+      state.itemsInCart.push(action.payload);
     },
     removeFromCart: (state, action) => {
       const productId = action.payload;
       state.itemsInCart = state.itemsInCart.filter(
         (item) => item.id !== productId
-      ); // Remove the product from the cart
+      );
     },
   },
   extraReducers: (builder) => {
