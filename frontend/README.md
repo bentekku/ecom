@@ -21,6 +21,7 @@ This is the front end of the e-commerce project, built with React.js, Vite, Type
    ```bash
    npm test
 ### Testing
+| Tests are not functional
 - Running Tests  
 To run tests for the front end, make sure to have the necessary testing libraries installed. Run the following command to execute the tests:
    ```bash
