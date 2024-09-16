@@ -24,3 +24,8 @@ Setup
 - POST /api/orders/add - Add an item to the cart
 - DELETE /api/orders/remove/:id - Remove an item from the cart
 - GET /api/orders- Get items in the cart
+
+### Note: Please create a `.env` file in the root of the backend directory. And feed in the following:
+- PORT = 5151
+- MONGO_URL = mongodb+srv://shadab:letmeinbitch@cluster0.kfie7.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0"% 
+<br/><br/>For best practices, it was ignored in the project's `.gitignore` file.
